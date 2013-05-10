@@ -1,0 +1,47 @@
+#!/usr/bin/python
+import argparse
+
+parser = argparse.ArgumentParser(description="Command Line Interface for Mintpresso")
+subparsers = parser.add_subparsers(help="sub-command help", dest='action')
+
+
+parser_get = subparsers.add_parser('get', help='Get point, edges from mintpresso.')
+
+parser_get.add_argument('--json', help="json data include information about a point. or edges")
+
+# options for Point
+parser_get.add_argument('--type', help="A type of point, it is REQUIRED to get a point. ")
+parser_get.add_argument('--identifier', help="A identifier of point. it is REQUIRED to get point")
+
+# options for Edges
+parser_get.add_argument('--subjectId', help="A subjectId of edge.")
+parser_get.add_argument('--subjectType', help="A subjectType of edge.")
+parser_get.add_argument('--subjectIdentifier', help="A subjectIdentifier of edge.")
+parser_get.add_argument('--verb', help="A verb of edge.")
+parser_get.add_argument('--objectId', help="A objectId of edge.")
+parser_get.add_argument('--objectType', help="A objectType of edge.")
+parser_get.add_argument('--objectIdentifier', help="A ObjectIdentifier of edge.")
+
+parser_set = subparsers.add_parser('set', help="Set point, edges to mintpresso.")
+
+parser_set.add_argument('--json', help="json data include information about a point or edges.")
+
+# options for Point
+parser_set.add_argument('--type', help="A type of point, it is REQUIRED to set a point. ")
+parser_set.add_argument('--identifier', help="A identifier of point. it is REQUIRED to set point")
+
+# options for Edges
+parser_set.add_argument('--subjectType', help="A subjectType of edge. it is REQUIRED to set a edge.")
+parser_set.add_argument('--subjectIdentifier', help="A subjectIdentifier of edge. it is REQUIRED to set a edge.")
+parser_set.add_argument('--verb', help="A verb of edge. it is REQUIRED to set a edge.")
+parser_set.add_argument('--objectType', help="A objectType of edge. it is REQUIRED to set a edge.")
+parser_set.add_argument('--objectIdentifier', help="A ObjectIdentifier of edge. it is REQUIRED to set a edge.")
+
+parser_console = subparsers.add_parser('console', help='Console')
+
+
+parser.add_argument("--token", type=str, 
+                    help="Mintpresso API Token", required=True)
+
+if __name__ == "__main__":
+    args = parser.parse_args()
