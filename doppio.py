@@ -84,7 +84,7 @@ class Doppio(object):
                 print "Error occured, reason: {0}, url: {1}".format(p, e.reason)
                 return None
                 
-        return {}
+        return resp.read()
 
     def get_point(self, d):
         return d
