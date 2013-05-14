@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import argparse
 
+from doppio import Doppio
+
 parser = argparse.ArgumentParser(description="Command Line Interface for Mintpresso")
 subparsers = parser.add_subparsers(help="sub-command help", dest='action')
 
@@ -45,3 +47,13 @@ parser.add_argument("--token", type=str,
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    doppio = Doppio(args.token)
+    if args.json.length == 0 and args.type.length == 0 \
+       and args.subjectId.length == 0:
+        print "one of --json, --type, --subjectId must setted"
+    if args.action == "console":
+        print "Not Implemented yet."
+    elif args.action == "get":
+        print doppio.get("some-type", "some-identifier")
+    elif args.action == "set":
+        print doppio.set("some-type", "some-identifier")
