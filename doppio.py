@@ -21,7 +21,7 @@ class Doppio(object):
     def __init__(self, token):
         splited = token.split("::")
         if len(splited) <= 1 or len(splited) >= 3:
-            raise UnvalidMintpressoTokenError()
+            raise InvalidMintpressoTokenError()
 
         self.token = splited[0]
         self.account_id = splited[1]
