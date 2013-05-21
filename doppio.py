@@ -109,7 +109,7 @@ class Doppio(object):
         try:
             resp = urllib2.urlopen(req)
         except urllib2.URLError, e:
-            print "Error occured, reason: {0}, url: {1}".format(e.reason, p)
+            print "Error occured, reason: {0}, url: {1}".format(e, p)
             return None
         
         res = json.loads(resp.read())
