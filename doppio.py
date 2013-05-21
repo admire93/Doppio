@@ -10,7 +10,7 @@ class InvalidMintpressoPrameterError(Exception):
 class Doppio(object):
     protocol = 'http'
     host = 'api.mintpresso.com'
-    port = '9001'
+    port = '80'
     version = 'v1'
     mint_path = {
       'point': "/account/{0}/point",
