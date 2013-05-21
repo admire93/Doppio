@@ -13,4 +13,5 @@ class DoppioTestCase(unittest.TestCase):
 
     def test_set(self):
         res = self.doppio.set(type='test', identifier='1')
-        self.assertEqual(res, "{'type': 'test', 'identifier': '1'}", 'Doppio.set(type=,identifier=)')
+        self.assertTrue(res.has_key(u'type'), 'Doppio.set(type=,identifier=) has key `type`.')
+        self.assertEqual(res[u'type'], u'test', 'Doppio.set(type=,identifier=) return right value.')

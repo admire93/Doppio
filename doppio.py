@@ -89,33 +89,38 @@ class Doppio(object):
         return {}
 
     def set(self, *args, **kwards): 
+        resp = None
         d = self.arg_validator(args, kwards)
-        header = {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accepts': 'application/json'
-        }
         if d.has_key("verb"):
             pass
             # Set Edge to mintpresso
         else:
-            p = self.route('point')
-            if not (d.has_key('type') and d.has_key('identifier')):
-                raise InvalidMintpressoPrameterError()
-
-            data = json.dumps(d)
-            req = urllib2.Request(p, data.encode('utf-8'), header)
-            try:
-                resp = urllib2.urlopen(req)
-            except urllib2.URLError as e:
-                print "Error occured, reason: {0}, url: {1}".format(p, e.reason)
-                return None
-                
-        return resp.read()
+            return self.set_point(d)
 
     def get_point(self, d):
         return d
 
     def set_point(self, d):
+        p = self.route('point')
+        data = json.dumps({'point': d})
+        header = {'Content-Type': 'application/json;charset=utf-8',
+                  'Accepts': 'application/json'}
+        req = urllib2.Request(p, data.encode('utf-8'), header)
+        try:
+            resp = urllib2.urlopen(req)
+        except urllib2.URLError, e:
+            print "Error occured, reason: {0}, url: {1}".format(e.reason, p)
+            return None
+        
+        res = json.loads(resp.read())
+        code = res[u'status'][u'code']
+        msg = res[u'status'][u'message']
+        if code == 200 or code == 201:
+            return res[u'point']
+        else:
+            print 'Mintpresso set failed. code:{0},message:{1}'.format(code,msg)
+            return None
+
         return d
 
     def get_edge(self, d):
