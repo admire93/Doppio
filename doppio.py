@@ -44,12 +44,38 @@ class Doppio(object):
 
 
     def arg_validator(self, args, kwards):
-        if (len(args) == 0 and len(kwards) == 0) or len(args) > 1:
-	    raise TypeError()
-        elif len(args) == 1:
-            return args
-        elif len(kwards) > 0:
-            return kwards
+        result = {}
+        if len(args) == 7:
+            result = {
+                'subjectId': args[0],
+                'subjectType': args[1],
+                'subjectIdentifer': args[2],
+                'verb': args[3],
+                'objectId': arg[4],
+                'objectType': arg[5],
+                'objectIdentifer': arg[6]
+            }
+        elif len(args) == 5:
+            result = {
+                'subjectType': args[0],
+                'subjectIdentifer': args[1],
+                'verb': args[2],
+                'objectType': arg[3],
+                'objectIdentifer': arg[4]
+            }
+        elif len(args) == 2:
+            result = {
+                'type': args[0],
+                'identifier': args[1]
+            }
+        elif len(kwards) > 0 and \
+             (kwards.has_key('type') or kwards.has_key('verb')):
+            result = kwards
+        else:
+            raise InvalidMintpressoPrameterError()
+
+        # TODO: Check validate of data in result.
+        return result
 
     def get(self, *args, **kwards):
         d = self.arg_validator(args, kwards)
