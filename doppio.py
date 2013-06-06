@@ -1,5 +1,8 @@
+import sys
 import json
 import urllib2
+
+from contextlib import contextmanager
 
 class InvalidMintpressoTokenError(Exception):
     pass
@@ -97,32 +100,45 @@ class Doppio(object):
         else:
             return self.set_point(d)
 
+    @contextmanager
+    def request(self, route, d, header):
+        resp = None
+        try:
+            req = urllib2.Request(route, json.dumps(d).encode('utf-8'), header)
+            resp = urllib2.urlopen(req)
+            for line in resp:
+                yield line
+        except urllib2.HTTPError as e:
+            msg = "HTTPError occured, reason: `{0}`, url: {1}".format(e,
+                                                                    route)
+            yield self.fail(e.code, msg)
+        except urllib2.URLError as e:
+            msg = "URLError occured, reason: {0}, url: {1}".format(e.reason,
+                                                                   route)
+            yield self.fail(500, msg)
+
+        except:
+            msg = "Unexpected error: {0}".format(sys.exc_info()[0])
+            yield self.fail(500, msg)
+        finally:
+            if resp is not None:
+                resp.close()
+
+    def fail(self, code, message):
+        r = {u'status': {u'code': code, u'message': message}}
+        return json.dumps(r).encode('utf-8')
+
     def get_point(self, d):
         return d
 
     def set_point(self, d):
         p = self.route('point')
-        data = json.dumps({'point': d})
+        d = {'point': d}
         header = {'Content-Type': 'application/json;charset=utf-8',
-                  'Accepts': 'application/json'}
-        req = urllib2.Request(p, data.encode('utf-8'), header)
-        try:
-            resp = urllib2.urlopen(req)
-        except urllib2.URLError, e:
-            print "Error occured, reason: {0}, url: {1}".format(e, p)
-            return None
+                  'Accepts': 'application/json;charset=utf-8'}
+        with self.request(p, d, header) as resp:
+            return json.loads(resp.decode('utf-8'))
         
-        res = json.loads(resp.read())
-        code = res[u'status'][u'code']
-        msg = res[u'status'][u'message']
-        if code == 200 or code == 201:
-            return res[u'point']
-        else:
-            print 'Mintpresso set failed. code:{0},message:{1}'.format(code,msg)
-            return None
-
-        return d
-
     def get_edge(self, d):
         return d
 

@@ -12,6 +12,6 @@ class DoppioTestCase(unittest.TestCase):
         self.assertEqual(self.doppio.route('edge'), 'http://api.mintpresso.com:80/v1/account/1643/edge?api_token=16438f80e29d-e7bc-4c90-8f01-040636acabbd', 'URI test for edge')
 
     def test_set(self):
-        res = self.doppio.set(type='test', identifier='1')
-        self.assertTrue(res.has_key(u'type'), 'Doppio.set(type=,identifier=) has key `type`.')
-        self.assertEqual(res[u'type'], u'test', 'Doppio.set(type=,identifier=) return right value.')
+        res = self.doppio.set(type='testtype', identifier='admire93@somemail.com')
+        self.assertTrue(res.has_key(u'point'), 'Doppio.set(type=,identifier=) has key `point`.')
+        self.assertEqual(res[u'point'][u'type'], u'testtype', 'Doppio.set(type=,identifier=) return right value.')
